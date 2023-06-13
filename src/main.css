@@ -1,0 +1,130 @@
+:root {
+    --primary: violet;
+    --secondary: rgb(45, 45, 45);
+    --tertiary: aqua;
+    --component: lightsteelblue;
+    --input_background: hsla(305, 100%, 50%, 0.35);
+    --input_border: 0.2rem solid black ;
+    --text-outline-width: 2px;
+    --text-shadow: 
+        calc(-1 * var(--text-outline-width)) 0 black,
+        0 var(--text-outline-width) black,
+        var(--text-outline-width) 0 black,
+        0 calc(-1 * var(--text-outline-width)) black;
+}
+
+.body {
+    background-color: var(--secondary);
+}
+
+.app {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    border: 0px;
+
+}
+
+.app .header {
+    background-color: var(--tertiary);
+    color: var(--primary);
+    font-weight: 700;
+    text-shadow: var(--text-shadow);
+    font-size: 1.5rem;
+    min-height: 2rem;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0%;
+    right: 100%;
+}
+
+.app .center {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    padding: 1rem;
+    width: fit-content;
+    height: fit-content;
+    border: 0px;
+    border-radius: 0.5rem;
+    background-color: var(--component);
+}
+
+.app .center .create_timer {
+    height: auto;
+    width: auto;
+}
+
+.app .center
+.create_timer .time_select {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+
+}
+
+h1 {
+    color: var(--primary);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h1, h2, h3 {
+    text-shadow: var(--text-shadow);
+}
+
+h2, h3 {
+    margin-bottom: 0;
+}
+
+h3 {
+    color: var(--tertiary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+h4 {
+    margin: 0;
+    color: black;
+    font-size: 1rem;
+}
+
+input[type=text] {
+    border: var(--input_border);
+    border-radius: 0.2rem;
+    padding: 0;
+    color: black;
+    font-size: 1rem;
+    background-color: var(--input_background);
+    box-sizing: border-box;
+    resize: none;
+    transition: padding 0.3s ease-in-out;
+}
+
+input[type=text]:focus {
+    padding: 5px;
+    outline: 0;
+}
+
+input[type=number] {
+    border: var(--input_border);
+    color: black;
+    font-size: 1rem;
+    text-align: center;
+    width: 2rem;
+    background-color: var(--input_background);
+    appearance: none;
+    -moz-appearance: textfield;
+    
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number]:focus {
+    outline: 0;
+}
