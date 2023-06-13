@@ -5,17 +5,30 @@
 
     const time_in = ref('00:00:00')
     const timer_name = ref('')
-    const input_hours = ref(Number)
-    const input_minutes = ref(Number)
-    const input_seconds = ref(Number)
+    const input_hours = ref(0)
+    const input_minutes = ref(0)
+    const input_seconds = ref(0)
 
     const timers_asc = computed(() => timers.value.sort((a, b) => {
         return 3600 * (a.hours - b.hours) + 60 * (a.minutes - b.minutes) + (a.seconds - b.seconds)
     }))
 
     const addTimer = () => {
-        console.log(time_in)
+
+        if(input_hours.value === 0 && input_minutes.value === 0 && input_seconds.value === 0){ return }
+
+        timers.value.push({
+            hours:input_hours.value,
+            minutes:input_minutes.value,
+            seconds:input_seconds.value,
+            name:timer_name.value,
+            done: false
+        })
     }
+
+    watch(timers, newVal => {
+        localStorage.setItem('timers', JSON.stringify(newVal))
+    }, { deep:true })
 
     watch(input_hours, (newHour) => {
         if(typeof(newHour) == "string"){
@@ -55,7 +68,7 @@
         <section class="header">
             <h1>Personal Timers</h1>
         </section>
-        <section class="center">
+        <section class="timer_block">
             <section class="create_timer">
                 <form @submit.prevent="addTimer">
                     <h3>What is the timer for?</h3>
@@ -86,9 +99,15 @@
                             v-model="input_seconds">
                         <h4>s</h4>
                     </div>
+
+                    <input type="submit" value="Add timer">
                 </form>
 
             </section>
+        </section>
+        <section class="timer_list">
+            <h3>Active Timers</h3>
+            {{ timers }}
         </section>
     
     </main>
