@@ -1,34 +1,39 @@
 <script setup>
-    import { ref, onMounted, computed, watch } from 'vue';
+    import { ref, onMounted, computed, watch } from 'vue'
+    import timerComp from './timerComp.vue'
+
+    var audio = new Audio()
 
     const timers = ref([])
-
-    const time_in = ref('00:00:00')
     const timer_name = ref('')
     const input_hours = ref(0)
     const input_minutes = ref(0)
     const input_seconds = ref(0)
 
-    const timers_asc = computed(() => timers.value.sort((a, b) => {
-        return 3600 * (a.hours - b.hours) + 60 * (a.minutes - b.minutes) + (a.seconds - b.seconds)
-    }))
-
     const addTimer = () => {
-
         if(input_hours.value === 0 && input_minutes.value === 0 && input_seconds.value === 0){ return }
 
-        timers.value.push({
-            hours:input_hours.value,
-            minutes:input_minutes.value,
-            seconds:input_seconds.value,
-            name:timer_name.value,
-            done: false
-        })
+        // var timerEntry = new timerComp({time:input_hours * 3600 + input_minutes * 60 + input_seconds,
+        //                                 name:timer_name})
+        var timerEntry = {
+            name: timer_name,
+            time: input_hours * 3600 + input_minutes * 60 + input_seconds,
+            run: Number
+        }
+        timerEntry.run = setInterval(() => {
+           decrementTime(timerEntry)
+        }, 1000);
+        timers.value.push(timerEntry)
     }
 
-    watch(timers, newVal => {
-        localStorage.setItem('timers', JSON.stringify(newVal))
-    }, { deep:true })
+
+    const decrementTime = object => {
+        console.log(object.time)
+        object.time -= 1
+        if(object.time <= 0){
+            clearInterval(object.run)
+        }
+    }
 
     watch(input_hours, (newHour) => {
         if(typeof(newHour) == "string"){
@@ -40,6 +45,7 @@
             input_hours.value = 0
         }
     })
+
     watch(input_minutes, (newMinute) => {
         if(typeof(newMinute) == "string"){
             input_minutes.value = 0
@@ -50,6 +56,7 @@
             input_minutes.value = 0
         }
     })
+
     watch(input_seconds, (newSecond) => {
         if(typeof(newSecond) == "string"){
             input_seconds.value = 0
@@ -64,14 +71,17 @@
 </script>
 
 <template>
-    <main class="app">
-        <section class="header">
+    <section class="header">
             <h1>Personal Timers</h1>
         </section>
+    <main class="app">
+        
         <section class="timer_block">
             <section class="create_timer">
-                <form @submit.prevent="addTimer">
+                <form @submit.prevent="addTimer">  
+
                     <h3>What is the timer for?</h3>
+
                     <input type="text" 
                     placeholder="e.g. work on project"
                     v-model="timer_name" />
@@ -99,15 +109,20 @@
                             v-model="input_seconds">
                         <h4>s</h4>
                     </div>
-
-                    <input type="submit" value="Add timer">
+                  
+                    <input type="submit" value="Add Timer" />
                 </form>
 
             </section>
         </section>
         <section class="timer_list">
             <h3>Active Timers</h3>
-            {{ timers }}
+            <div class="list">
+                <div v-for="item in timers" class="listItem">
+                    <h4>{{ item.name }}</h4>
+                    <input type="number" v-model="item.time" readonly="readonly">
+                </div>
+            </div>
         </section>
     
     </main>
