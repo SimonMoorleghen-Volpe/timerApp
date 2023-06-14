@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, onMounted, computed, watch } from 'vue'
+    import { ref, watch } from 'vue'
     import timerComp from './timerComp.vue'
 
     var audio = new Audio()
@@ -13,22 +13,22 @@
     const addTimer = () => {
         if(input_hours.value === 0 && input_minutes.value === 0 && input_seconds.value === 0){ return }
 
-        // var timerEntry = new timerComp({time:input_hours * 3600 + input_minutes * 60 + input_seconds,
-        //                                 name:timer_name})
+        // var timerEntry = Vue.createApp(timerComp)
         var timerEntry = {
-            name: timer_name,
-            time: input_hours * 3600 + input_minutes * 60 + input_seconds,
-            run: Number
+            name: timer_name.value,
+            time: input_hours.value * 3600 + input_minutes.value * 60 + input_seconds.value,
+            // run: Number
         }
-        timerEntry.run = setInterval(() => {
-           decrementTime(timerEntry)
-        }, 1000);
+        // timerEntry.run = setInterval(() => {
+        //    decrementTime(timerEntry)
+        // }, 1000);
         timers.value.push(timerEntry)
+        // console.log(timerEntry)
     }
 
 
     const decrementTime = object => {
-        console.log(object.time)
+
         object.time -= 1
         if(object.time <= 0){
             clearInterval(object.run)
@@ -118,10 +118,10 @@
         <section class="timer_list">
             <h3>Active Timers</h3>
             <div class="list">
-                <div v-for="item in timers" class="listItem">
-                    <h4>{{ item.name }}</h4>
-                    <input type="number" v-model="item.time" readonly="readonly">
-                </div>
+                <timerComp v-for="item in timers" 
+                    :inpName="item.name"
+                    :inpTime="item.time"
+                />
             </div>
         </section>
     
