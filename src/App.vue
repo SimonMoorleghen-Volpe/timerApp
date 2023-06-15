@@ -2,8 +2,6 @@
     import { ref, watch } from 'vue'
     import timerComp from './timerComp.vue'
 
-    var audio = new Audio()
-
     const timers = ref([])
     const timer_name = ref('')
     const input_hours = ref(0)
@@ -13,27 +11,14 @@
     const addTimer = () => {
         if(input_hours.value === 0 && input_minutes.value === 0 && input_seconds.value === 0){ return }
 
-        // var timerEntry = Vue.createApp(timerComp)
-        var timerEntry = {
+        timers.value.push({
             name: timer_name.value,
-            time: input_hours.value * 3600 + input_minutes.value * 60 + input_seconds.value,
-            // run: Number
-        }
-        // timerEntry.run = setInterval(() => {
-        //    decrementTime(timerEntry)
-        // }, 1000);
-        timers.value.push(timerEntry)
-        // console.log(timerEntry)
+            time: input_hours.value * 3600 + input_minutes.value * 60 + input_seconds.value
+        })
+
+
     }
 
-
-    const decrementTime = object => {
-
-        object.time -= 1
-        if(object.time <= 0){
-            clearInterval(object.run)
-        }
-    }
 
     watch(input_hours, (newHour) => {
         if(typeof(newHour) == "string"){
@@ -89,22 +74,16 @@
                     <div class="time_select">
                         <input 
                             type="number" 
-                            min="0" 
-                            max="23" 
                             placeholder="00" 
                             v-model="input_hours">
                         <h4>h&nbsp;</h4>
                         <input 
                             type="number" 
-                            min="0" 
-                            max="59" 
                             placeholder="00" 
                             v-model="input_minutes">
                         <h4>m&nbsp;</h4>
                         <input 
                             type="number" 
-                            min="0" 
-                            max="59" 
                             placeholder="00" 
                             v-model="input_seconds">
                         <h4>s</h4>
@@ -117,12 +96,14 @@
         </section>
         <section class="timer_list">
             <h3>Active Timers</h3>
-            <div class="list">
-                <timerComp v-for="item in timers" 
-                    :inpName="item.name"
-                    :inpTime="item.time"
+
+            <template v-for="timer in timers">
+                <timerComp
+                    :inpName = timer.name
+                    :inpTime = timer.time
                 />
-            </div>
+            </template>
+
         </section>
     
     </main>
