@@ -1,12 +1,12 @@
 <template>
 
-    <input type="text" v-model="name" readonly="readonly" />
+    <input type="text" v-model="timerName" readonly="readonly" />
 
-    <div class="time_select">
+    <div>
         <h4 id="hour">0</h4>
         <h4 id="minute">0</h4>
         <h4 id="second">0</h4>
-    </div>
+    </div>   
 
 </template>
 
@@ -19,34 +19,33 @@
         },
         setup(props){
 
-            name.value = props.inpName
+            timerName.value = props.inpName
             time.value = props.inpTime
             
             hour.value = Math.floor(time.value/3600)
             minute.value = Math.floor(time.value/60) % 60
             second.value = time.value % 60
-            run = setInterval(function() {decrementTime()}, 1000)
-            // return {name, time, hour, minute, second}
+            if(run != Number){
+                run = setInterval(function() {decrementTime()}, 1000)
+            }
+            
+            return {timerName, time, hour, minute, second}
         },
         data: function () {
             return {
-                time: this.inpTime,
-                name: this.inpName,
-                hour: hour,
-                minute: minute,
-                second: second,
-
+                time: ref(this.inpTime),
+                timerName: this.inpName,
             }   
         }
     }
 
-    const name = ref('')
+    var timerName = ref('')
 
-    const time = ref(0)
+    var time = ref(0)
 
-    const hour = ref(0)
-    const minute = ref(0)
-    const second = ref(0)
+    var hour = ref(0)
+    var minute = ref(0)
+    var second = ref(0)
     var run
 
     let decrementTime = () => {
@@ -60,7 +59,10 @@
     }
 
     watch(hour, (newHour)=>{
-        document.getElementById('hour').innerHTML = newHour
+        if(hour){
+            document.getElementById('hour').innerHTML = newHour
+        }
+        
     })
 
     watch(minute, (newMinute)=>{

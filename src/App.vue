@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch } from 'vue'
+    import { createElementVNode, ref, watch } from 'vue'
     import timerComp from './timerComp.vue'
 
     const timers = ref([])
@@ -7,15 +7,21 @@
     const input_hours = ref(0)
     const input_minutes = ref(0)
     const input_seconds = ref(0)
+    var id = 0
 
     const addTimer = () => {
         if(input_hours.value === 0 && input_minutes.value === 0 && input_seconds.value === 0){ return }
 
-        timers.value.push({
+        // if(timers.value.length > 0){ return }
+        var newNode = createElementVNode(timerComp)
+        newNode.time = input_hours.value * 3600 + input_minutes.value * 60 + input_seconds.value
+        newNode.name = timer_name.value
+        timers.value.push( {
             name: timer_name.value,
-            time: input_hours.value * 3600 + input_minutes.value * 60 + input_seconds.value
+            time: input_hours.value * 3600 + input_minutes.value * 60 + input_seconds.value,
+            ID: id
         })
-
+        id += 1
 
     }
 
@@ -95,14 +101,19 @@
             </section>
         </section>
         <section class="timer_list">
-            <h3>Active Timers</h3>
+            <h3>Active Timer</h3>
 
-            <template v-for="timer in timers">
-                <timerComp
-                    :inpName = timer.name
-                    :inpTime = timer.time
+            <div v-for="timer in timers">
+                <timerComp 
+                    :key="timer.ID"
+                    :inpName="timer.name"
+                    :inpTime="timer.time"
                 />
-            </template>
+            </div>
+            
+
+            
+
 
         </section>
     
