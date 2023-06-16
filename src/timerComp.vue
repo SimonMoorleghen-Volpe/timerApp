@@ -3,15 +3,13 @@
     <input type="text" v-model="timerName" readonly="readonly" />
 
     <div>
-        <h4 id="hour">0</h4>
-        <h4 id="minute">0</h4>
-        <h4 id="second">0</h4>
+        <h4>{{ hour }} : {{ minute }} : {{ second }}</h4>
     </div>   
 
 </template>
 
 <script>
-    import {ref, watch} from 'vue'
+    import {h, ref, watch} from 'vue'
     export default {
         props:{
             inpTime: Number,
@@ -19,34 +17,60 @@
         },
         setup(props){
 
-            timerName.value = props.inpName
-            time.value = props.inpTime
-            
-            hour.value = Math.floor(time.value/3600)
-            minute.value = Math.floor(time.value/60) % 60
-            second.value = time.value % 60
-            if(run != Number){
-                run = setInterval(function() {decrementTime()}, 1000)
-            }
-            
-            return {timerName, time, hour, minute, second}
+
+
         },
         data: function () {
             return {
                 time: ref(this.inpTime),
-                timerName: this.inpName,
+                timerName: ref(this.inpName),
+                hour: ref(Math.floor(this.inpTime/3600)),
+                minute: ref(Math.floor(this.inpTime/60) % 60),
+                second: ref(this.inpTime % 60),
+                run
             }   
+        },
+        mounted () {
+            run = setInterval(function () {this.decrementTime()}, 1000)
+            console.log(run)
+        },
+        // watch: {
+        //     hour(val)  {
+        //         this.$el.queryselector('#hour').innerText = val
+        //     },
+
+        //     minute(val) {
+        //         this.$el.queryselector('#minute').innerText = val
+        //     },
+
+        //     second(val){
+        //         this.$el.queryselector('#second').innerText = val
+        //     }
+        // },
+        methods: {
+            decrementTime() {
+                time.value -= 1
+                hour.value = Math.floor(time.value/3600)
+                minute.value = Math.floor(time.value/60) % 60
+                second.value = time.value % 60
+
+                console.log(hour.value, minute.value, second.value, time.value)
+                
+                if(time.value <= 0){
+                    clearInterval(run)
+                }
+            }
         }
     }
 
     var timerName = ref('')
 
-    var time = ref(0)
+    const time = ref(0)
 
-    var hour = ref(0)
-    var minute = ref(0)
-    var second = ref(0)
-    var run
+    const hour = ref(0)
+    const minute = ref(0)
+    const second = ref(0)
+    let run = null
 
     let decrementTime = () => {
         time.value -= 1
@@ -58,19 +82,8 @@
         }
     }
 
-    watch(hour, (newHour)=>{
-        if(hour){
-            document.getElementById('hour').innerHTML = newHour
-        }
-        
-    })
-
-    watch(minute, (newMinute)=>{
-        document.getElementById('minute').innerHTML = newMinute
-    })
-
-    watch(second, (newSecond)=>{
-        document.getElementById('second').innerHTML = newSecond
-    })
+    
+    
+    
 
 </script>
